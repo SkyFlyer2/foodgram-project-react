@@ -9,6 +9,7 @@ SECRET_KEY = '82_a(jlizfl1zb_cu5!4b+gn&e4$9($8ivgrcbk5i5=wo3mgb-'
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
+AUTH_USER_MODEL = 'users.User'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -17,8 +18,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'users',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
