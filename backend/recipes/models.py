@@ -13,10 +13,34 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
-        ordering = ['name']
+        ordering = ['title']
 
     def __str__(self):
         return f'{self.name}, {self.measurement_unit}'
+
+
+class Tag(models.Model):
+
+    name = models.CharField(
+        'Название',
+        max_length=60,
+        unique=True)
+    color_hex = models.CharField(
+        'Цвет',
+        max_length=7,
+        unique=True)
+    slug = models.SlugField(
+        'Слаг',
+        max_length=150,
+        unique=True)
+
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
+        ordering = ['-id']
+
+    def __str__(self):
+        return self.name
 
 
 class Recipe(models.Model):
@@ -35,7 +59,7 @@ class Recipe(models.Model):
     text = models.TextField('Описание')
     ingredients = models.ManyToManyField(
         Ingredient,
-        through='Ingredients_in_recipe',
+        through='Ingredients_quantity',
         related_name='recipes',
         verbose_name='Ингредиенты',
     )
@@ -63,30 +87,6 @@ class Recipe(models.Model):
         return self.name
 
 
-class Tag(models.Model):
-
-    name = models.CharField(
-        'Название',
-        max_length=60,
-        unique=True)
-    color_hex = models.CharField(
-        'Цвет',
-        max_length=7,
-        unique=True)
-    slug = models.SlugField(
-        'Слаг',
-        max_length=150,
-        unique=True)
-
-    class Meta:
-        verbose_name = 'Тег'
-        verbose_name_plural = 'Тпги'
-        ordering = ['-id']
-
-    def __str__(self):
-        return self.name
-
-
 class Ingredients_quantity(models.Model):
     recipe = models.ForeignKey(
         Recipe,
@@ -106,8 +106,71 @@ class Ingredients_quantity(models.Model):
             )])
 
     class Meta:
-        verbose_name = 'кол-во ингредиента'
-        verbose_name_plural = 'кол-во ингредиентов'
+        verbose_name = 'Ингридиент'
+        verbose_name_plural = 'Ингридиенты для рецепта'
+        ordering = ['-id']
+        models.UniqueConstraint(
+            fields=['recipe', 'ingredient', ],
+            name='recipe_ingredient_uniq'
+        )
 
     def __str__(self):
-        return f'Из рецепта "{self.recipe}"'
+        return (
+            f'{self.ingredient.name} ({self.ingredient.unit})'
+            f' - {self.quantity} '
+        )
+
+
+class Order_cart(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='order_cart',
+        verbose_name='Пользователь',
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='order_cart',
+        verbose_name='Рецепт',
+    )
+
+    class Meta:
+        verbose_name = 'Корзина'
+        verbose_name_plural = 'Корзина'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'recipe'],
+                name='order_cart_uniq')
+        ]
+
+    def __str__(self):
+        # return f'{self.user} добавил "{self.recipe}" в Корзину покупок'
+        return f'"{self.recipe}" добавлено в корзину'
+
+
+class Favorites(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='favorites',
+        verbose_name='Пользователь',
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='favorites',
+        verbose_name='Рецепт',
+    )
+
+    class Meta:
+        verbose_name = 'Избранное'
+        verbose_name_plural = 'Избранное'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'recipe'],
+                name='unique_favourite')
+        ]
+
+    def __str__(self):
+        return f'"{self.recipe}" добавлено в избранное'
