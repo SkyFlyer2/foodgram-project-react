@@ -2,7 +2,8 @@ asgiref==3.5.2
 backports.zoneinfo==0.2.1
 Django==2.2.19
 djangorestframework==3.12.4
-djangorestframework-simplejwt==5.2.2
+djangorestframework-simplejwt==4.8.0
+djoser==2.1.0
 flake8==6.0.0
 mccabe==0.7.0
 pycodestyle==2.10.0
