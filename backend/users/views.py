@@ -10,3 +10,11 @@ from rest_framework.response import Response
 
 from .models import Follow
 
+#User = get_user_model()
+from users.models import User
+
+
+class CustomUserViewSet(UserViewSet):
+    queryset = User.objects.all()
+#    serializer_class = CustomUserSerializer
+#    pagination_class = CustomPagination
