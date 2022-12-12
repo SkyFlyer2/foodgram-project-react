@@ -3,6 +3,7 @@ from rest_framework.fields import SerializerMethodField
 from users.models import User, Follow
 from djoser.serializers import UserSerializer
 
+
 class UsersSerializer(UserSerializer):
     is_subscribed = SerializerMethodField(read_only=True)
     class Meta:

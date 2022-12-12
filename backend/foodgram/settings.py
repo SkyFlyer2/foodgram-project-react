@@ -125,23 +125,18 @@ REST_FRAMEWORK = {
     ],
 }
 
-SIMPLE_JWT = {
-   # Устанавливаем срок жизни токена
-   'ACCESS_TOKEN_LIFETIME': timedelta(days=100),
-   'AUTH_HEADER_TYPES': ('Bearer',),
-}
 
-#DJOSER = {
-#    'HIDE_USERS': False,
-#    'SERIALIZERS': {
-#        'user': 'api.serializers.UsersSerializer',
-#        'current_user': 'api.serializers.UsersSerializer',
-#    },
-#    'PERMISSIONS': {
-#        'user_list': ['rest_framework.permissions.AllowAny'],
-#        'user': ['rest_framework.permissions.IsAuthenticated'],
-#    },
-#}
+DJOSER = {
+    'HIDE_USERS': False,
+    'SERIALIZERS': {
+        'user': 'api.serializers.UsersSerializer',
+        'current_user': 'api.serializers.UsersSerializer',
+    },
+    'PERMISSIONS': {
+        'user_list': ['rest_framework.permissions.AllowAny'],
+        'user': ['rest_framework.permissions.IsAuthenticated'],
+    },
+}
 
 # Количество выводимых постов на странице
 #COUNT_INDEX_POSTS = os.environ.get('COUNT_INDEX_POSTS', 10)
