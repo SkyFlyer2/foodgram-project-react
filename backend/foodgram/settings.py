@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
     # 'rest_framework_simplejwt',
     'djoser',
     'users',
@@ -31,6 +32,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -55,6 +57,13 @@ TEMPLATES = [
         },
     },
 ]
+
+# CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r'^/api/.*$' 
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+] 
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
@@ -98,9 +107,13 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.User'
+
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -118,6 +131,17 @@ SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
+#DJOSER = {
+#    'HIDE_USERS': False,
+#    'SERIALIZERS': {
+#        'user': 'api.serializers.UsersSerializer',
+#        'current_user': 'api.serializers.UsersSerializer',
+#    },
+#    'PERMISSIONS': {
+#        'user_list': ['rest_framework.permissions.AllowAny'],
+#        'user': ['rest_framework.permissions.IsAuthenticated'],
+#    },
+#}
 
 # Количество выводимых постов на странице
 #COUNT_INDEX_POSTS = os.environ.get('COUNT_INDEX_POSTS', 10)
