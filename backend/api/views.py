@@ -23,6 +23,10 @@ from .permissions import (IsAdmin, IsAdminOrReadOnly,
                           IsAuthorAdminModeratorOrReadOnly)
 
 
+
+
+
+
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
 #    serializer_class = IngredientSerializer

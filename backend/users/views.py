@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from api.serializers import UsersSerializer
 
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
@@ -13,9 +13,9 @@ from .models import Follow
 from users.models import User
 
 
-class CustomUserViewSet(UserViewSet):
+class UsersViewSet(UserViewSet):
     queryset = User.objects.all()
-#    serializer_class = CustomUserSerializer
+    serializer_class = UsersSerializer
 #    pagination_class = CustomPagination
     permission_classes=[IsAuthenticated]
 
