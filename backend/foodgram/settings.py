@@ -58,12 +58,12 @@ TEMPLATES = [
     },
 ]
 
-# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/api/.*$' 
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-] 
+#CORS_ALLOWED_ORIGINS = [
+#    'http://localhost:3000',
+#] 
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
