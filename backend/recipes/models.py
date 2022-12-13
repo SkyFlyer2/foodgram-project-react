@@ -7,13 +7,13 @@ User = get_user_model()
 
 
 class Ingredient(models.Model):
-    title = models.CharField('Название', max_length=200)
-    unit = models.CharField('Единица измерения', max_length=200)
+    name = models.CharField('Название', max_length=200)
+    measurement_unit = models.CharField('Единица измерения', max_length=200)
 
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
-        ordering = ['title']
+        ordering = ['name']
 
     def __str__(self):
         return f'{self.name}, {self.measurement_unit}'
@@ -25,7 +25,7 @@ class Tag(models.Model):
         'Название',
         max_length=60,
         unique=True)
-    color_hex = models.CharField(
+    color = models.CharField(
         'Цвет',
         max_length=7,
         unique=True)

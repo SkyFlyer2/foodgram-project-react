@@ -18,13 +18,13 @@ class RecipeAdmin(admin.ModelAdmin):
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('title', 'unit',)
-    list_filter = ('title',)
+    list_display = ('name', 'measurement_unit',)
+    list_filter = ('name',)
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    list_display = ('name', 'color_hex', 'slug',)
+    list_display = ('name', 'color', 'slug',)
 
 
 @admin.register(Order_cart)
