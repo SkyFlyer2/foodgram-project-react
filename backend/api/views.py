@@ -21,7 +21,7 @@ from recipes.models import (Favorites, Ingredient, Ingredients_quantity,
 
 from .permissions import (IsAdmin, IsAdminOrReadOnly,
                           IsAuthorAdminModeratorOrReadOnly)
-from .serializers import (IngredientSerializer, 
+from .serializers import (IngredientSerializer, RecipeSerializer,
                           TagSerializer)
 
 
@@ -44,7 +44,7 @@ class TagViewSet(viewsets.ModelViewSet):
 
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
-   # serializer_class = Serializer
+    serializer_class = RecipeSerializer
     permission_classes = (IsAuthorAdminModeratorOrReadOnly | IsAdminOrReadOnly,)
     #pagination_class = CustomPagination
     filter_backends = (DjangoFilterBackend,)
