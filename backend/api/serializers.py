@@ -1,10 +1,15 @@
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
+from django.shortcuts import get_object_or_404
 from users.models import User, Follow
-from recipes.models import Tag, Ingredient, Recipe, Favorites, Order_cart
+from recipes.models import Tag, Ingredient, Recipe, Favorites, Order_cart, IngredientsForRecipes
 from djoser.serializers import UserSerializer
 from rest_framework.exceptions import ValidationError
 from rest_framework import status
+from rest_framework.serializers import (IntegerField, ModelSerializer,
+                                        PrimaryKeyRelatedField,
+                                        SerializerMethodField,
+                                        SlugRelatedField, ValidationError)
 from drf_extra_fields.fields import Base64ImageField
 
 
@@ -117,14 +122,21 @@ class RecipeSerializer(serializers.ModelSerializer):
             user=request.user, recipe__id=obj.id).exists()
 
 
-#class IngredientsForRecipes(serializers.ModelSerializer):
+class IngredientsForRecipes(serializers.ModelSerializer):
+    id = PrimaryKeyRelatedField(
+        source='ingredient',
+        queryset=Ingredient.objects.all()
+    )
 
+    class Meta:
+        model = IngredientsForRecipes
+        fields = ('id', 'amount',)
 
 
 class NewRecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField(use_url=True, max_length=None)
     author = UsersSerializer(read_only=True)
-    ingredients = CreateIngredientRecipeSerializer(many=True)
+    ingredients = IngredientsForRecipes(many=True)
     tags = PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True)
     cooking_time = IntegerField()
 
@@ -135,3 +147,51 @@ class NewRecipeSerializer(serializers.ModelSerializer):
             'name', 'text', 'cooking_time',
         )
 
+    def validate_ingredients(self, value):
+        ingredients = value
+        if not ingredients:
+            raise ValidationError({'Необходимо добавить ингридиенты!'})
+        ingredients_list = []
+        for item in ingredients:
+            ingredient = get_object_or_404(Ingredient, id=item['id'])
+            if ingredient in ingredients_list:
+                raise ValidationError({'Ингридиенты должны быть уникальными!'})
+#            if int(item['amount']) <= 0:
+#                raise ValidationError({
+#                    'amount': 'Количество ингредиента должно быть больше 0!'
+#                })
+            ingredients_list.append(ingredient)
+        return value
+
+    def validate_tags(self, value):
+        tags = value
+        if not tags:
+            raise ValidationError({'Выберите теги!'})
+        tags_list = []
+        for tag in tags:
+            if tag in tags_list:
+                raise ValidationError({'Теги не должны повторяться!'})
+            tags_list.append(tag)
+        return value
+
+#    @atomic
+    def create(self, validated_data):
+        request = self.context.get('request')
+        ingredients = validated_data.pop('ingredients')
+        tags = validated_data.pop('tags')
+        recipe = Recipe.objects.create(
+            author=request.user,
+            **validated_data
+        )
+        self.create_ingredients(recipe, ingredients)
+        recipe.tags.set(tags)
+        return recipe
+
+    # да, теги сохраняются
+#    @atomic
+    def update(self, instance, validated_data):
+        ingredients = validated_data.pop('ingredients')
+        recipe = instance
+        IngredientsForRecipes.objects.filter(recipe=recipe).delete()
+        self.create_ingredients(recipe, ingredients)
+        return super().update(recipe, validated_data)
