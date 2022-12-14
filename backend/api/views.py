@@ -8,21 +8,21 @@ from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action, api_view  #, permission_classes
 from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin,
                                    ListModelMixin)
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
+from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from users.models import User
 
-from recipes.models import (Favorites, Ingredient, Ingredients_quantity,
+from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
                             Recipe, Order_cart, Tag)
-
+from api.pagination import SetCustomPagination
 from .permissions import (IsAdmin, IsAdminOrReadOnly,
                           IsAuthorAdminModeratorOrReadOnly)
 from .serializers import (IngredientSerializer, RecipeSerializer,
-                          TagSerializer)
+                            NewRecipeSerializer, TagSerializer)
 
 
 
@@ -46,7 +46,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     permission_classes = (IsAuthorAdminModeratorOrReadOnly | IsAdminOrReadOnly,)
-    #pagination_class = CustomPagination
+    pagination_class = SetCustomPagination
     filter_backends = (DjangoFilterBackend,)
     #filterset_class = RecipeFilter
+
+    def get_serializer_class(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            return RecipeSerializer
+        return NewRecipeSerializer
+
+
 

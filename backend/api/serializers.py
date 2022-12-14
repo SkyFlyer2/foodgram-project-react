@@ -114,3 +114,23 @@ class RecipeSerializer(serializers.ModelSerializer):
             return False
         return Order_cart.objects.filter(
             user=request.user, recipe__id=obj.id).exists()
+
+
+#class IngredientsForRecipes(serializers.ModelSerializer):
+
+
+
+class NewRecipeSerializer(serializers.ModelSerializer):
+    image = Base64ImageField(use_url=True, max_length=None)
+    author = UsersSerializer(read_only=True)
+    ingredients = CreateIngredientRecipeSerializer(many=True)
+    tags = PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True)
+    cooking_time = IntegerField()
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'id', 'image', 'tags', 'author', 'ingredients',
+            'name', 'text', 'cooking_time',
+        )
+

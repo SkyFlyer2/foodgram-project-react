@@ -87,7 +87,7 @@ class Recipe(models.Model):
         return self.name
 
 
-class Ingredients_quantity(models.Model):
+class IngredientsForRecipes(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
@@ -99,7 +99,7 @@ class Ingredients_quantity(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Ингредиент',
     )
-    quantity = models.PositiveSmallIntegerField(
+    amount = models.PositiveSmallIntegerField(
         'Количество',
         validators=[validators.MinValueValidator(
             1, message='Минимальное значение - 1 ед.!'
@@ -107,7 +107,7 @@ class Ingredients_quantity(models.Model):
 
     class Meta:
         verbose_name = 'Ингридиент'
-        verbose_name_plural = 'Ингридиенты для рецепта'
+        verbose_name_plural = 'Ингридиенты в рецептах'
         ordering = ['-id']
         models.UniqueConstraint(
             fields=['recipe', 'ingredient', ],
@@ -169,7 +169,7 @@ class Favorites(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='unique_favourite')
+                name='unique_favorite')
         ]
 
     def __str__(self):
