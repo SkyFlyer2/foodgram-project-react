@@ -59,7 +59,7 @@ class Recipe(models.Model):
     text = models.TextField('Описание')
     ingredients = models.ManyToManyField(
         Ingredient,
-        through='Ingredients_quantity',
+        through='IngredientsForRecipes',
         related_name='recipes',
         verbose_name='Ингредиенты',
     )
@@ -106,8 +106,8 @@ class IngredientsForRecipes(models.Model):
             )])
 
     class Meta:
-        verbose_name = 'Ингридиент'
-        verbose_name_plural = 'Ингридиенты в рецептах'
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты в рецептах'
         ordering = ['-id']
         models.UniqueConstraint(
             fields=['recipe', 'ingredient', ],
@@ -121,17 +121,17 @@ class IngredientsForRecipes(models.Model):
         )
 
 
-class Order_cart(models.Model):
+class ShoppingCart(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='order_cart',
+        related_name='shopping_cart',
         verbose_name='Пользователь',
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='order_cart',
+        related_name='shopping_cart',
         verbose_name='Рецепт',
     )
 
@@ -141,7 +141,7 @@ class Order_cart(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='order_cart_uniq')
+                name='shopping_cart_uniq')
         ]
 
     def __str__(self):

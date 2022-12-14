@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 from django.shortcuts import get_object_or_404
 from users.models import User, Follow
-from recipes.models import Tag, Ingredient, Recipe, Favorites, Order_cart, IngredientsForRecipes
+from recipes.models import Tag, Ingredient, Recipe, Favorites, ShoppingCart, IngredientsForRecipes
 from djoser.serializers import UserSerializer
 from rest_framework.exceptions import ValidationError
 from rest_framework import status
@@ -118,7 +118,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if request.user.is_anonymous:
             return False
-        return Order_cart.objects.filter(
+        return ShoppingCart.objects.filter(
             user=request.user, recipe__id=obj.id).exists()
 
 
@@ -187,7 +187,6 @@ class NewRecipeSerializer(serializers.ModelSerializer):
         recipe.tags.set(tags)
         return recipe
 
-    # да, теги сохраняются
 #    @atomic
     def update(self, instance, validated_data):
         ingredients = validated_data.pop('ingredients')

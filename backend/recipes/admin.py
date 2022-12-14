@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (Favorites, Ingredient, IngredientsForRecipes, Recipe,
-                     Order_cart, Tag)
+                     ShoppingCart, Tag)
 
 
 @admin.register(Recipe)
@@ -27,16 +27,16 @@ class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'color', 'slug',)
 
 
-@admin.register(Order_cart)
-class OrderCartAdmin(admin.ModelAdmin):
+@admin.register(ShoppingCart)
+class ShoppingCartAdmin(admin.ModelAdmin):
     list_display = ('user', 'recipe',)
 
 
 @admin.register(Favorites)
-class FavouriteAdmin(admin.ModelAdmin):
+class FavoriteAdmin(admin.ModelAdmin):
     list_display = ('user', 'recipe',)
 
 
 @admin.register(IngredientsForRecipes)
-class IngredientInRecipe(admin.ModelAdmin):
-    list_display = ('recipe', 'ingredient', 'quantity',)
+class IngredientForRecipesAdmin(admin.ModelAdmin):
+    list_display = ('recipe', 'ingredient', 'amount',)

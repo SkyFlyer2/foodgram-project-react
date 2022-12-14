@@ -17,7 +17,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from users.models import User
 
 from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
-                            Recipe, Order_cart, Tag)
+                            Recipe, ShoppingCart, Tag)
 from api.pagination import SetCustomPagination
 from .permissions import (IsAdmin, IsAdminOrReadOnly,
                           IsAuthorAdminModeratorOrReadOnly)
