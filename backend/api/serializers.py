@@ -10,6 +10,8 @@ from drf_extra_fields.fields import Base64ImageField
 
 class UsersSerializer(UserSerializer):
     is_subscribed = SerializerMethodField(read_only=True)
+
+
     class Meta:
         fields = (
             'email', 'id', 'username', 'first_name', 'last_name', 'is_subscribed',
@@ -21,6 +23,7 @@ class UsersSerializer(UserSerializer):
         if user.is_anonymous:
             return False
         return Follow.objects.filter(user=user, author=obj).exists()
+
 
 class RecipeInfoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -68,7 +71,6 @@ class FollowSerializer(UsersSerializer):
         return serializer.data
 
 
-
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
@@ -79,7 +81,6 @@ class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
         fields = '__all__'
-
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -98,7 +99,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'tags', 'author', 'ingredients',
             'is_favorited', 'is_in_shopping_cart',
-            'name', 'image', 'text', 'cooking_time'
+            'name', 'image', 'text', 'cooking_time',
         )
 
     def get_is_favorited(self, obj):
