@@ -15,6 +15,8 @@ from .models import Follow
 from users.models import User
 
 
+#User = get_user_model()
+
 class UsersViewSet(UserViewSet):
     queryset = User.objects.all()
     serializer_class = UsersSerializer
