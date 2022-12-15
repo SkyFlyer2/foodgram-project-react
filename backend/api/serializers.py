@@ -16,9 +16,6 @@ from rest_framework.serializers import (IntegerField, ModelSerializer,
 from drf_extra_fields.fields import Base64ImageField
 
 
-# User = get_user_model()
-
-
 class UsersSerializer(UserSerializer):
     is_subscribed = SerializerMethodField(read_only=True)
 
@@ -93,34 +90,6 @@ class IngredientSerializer(serializers.ModelSerializer):
         model = Ingredient
         fields = '__all__'
 
-#class IngredientsForRecipes(serializers.ModelSerializer):
-#    id = PrimaryKeyRelatedField(
-#        source='ingredient',
-#        queryset=Ingredient.objects.all()
-#    )
-
-#    class Meta:
-#        model = IngredientsForRecipes
-#        fields = ('id', 'amount',)
-#    measurement_unit = SlugRelatedField(
-#        source='ingredient',
-#        slug_field='measurement_unit',
-#        read_only=True,
-#    )
-#    name = SlugRelatedField(
-#        source='ingredient',
-#        slug_field='name',
-#        read_only=True,
-#    )
-
-#    class Meta:
-#        model = IngredientsForRecipes
-#        fields = (
-#            'id',
-#            'name',
-#            'measurement_unit',
-#            'amount',
-#        )
 
 class RecipeSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
@@ -225,7 +194,6 @@ class NewRecipeSerializer(serializers.ModelSerializer):
                 recipe=recipe,
                 ingredient_id=ingredient.get('id'),
                 amount=ingredient.get('amount'), )
-
 
     def create(self, validated_data):
         request = self.context.get('request')
