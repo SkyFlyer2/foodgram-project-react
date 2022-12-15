@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 from django.shortcuts import get_object_or_404
 from django.db.models import F
+from django.db import transaction
 from users.models import User, Follow
 from recipes.models import Tag, Ingredient, Recipe, Favorites, ShoppingCart, IngredientsForRecipes
 from djoser.serializers import UserSerializer
@@ -116,7 +117,12 @@ class IngredientsForRecipes(serializers.ModelSerializer):
 #            'measurement_unit',
 #            'amount',
 #        )
+class IngredientsForRecipesNewSerializer(ModelSerializer):
+    id = IntegerField(write_only=True)
 
+    class Meta:
+        model = IngredientsForRecipes
+        fields = ('id', 'amount')
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -167,9 +173,10 @@ class RecipeSerializer(serializers.ModelSerializer):
 class NewRecipeSerializer(serializers.ModelSerializer):
     image = Base64ImageField(use_url=True, max_length=None)
     author = UsersSerializer(read_only=True)
-    ingredients = IngredientsForRecipes(many=True)
+    ingredients = IngredientsForRecipesNewSerializer(many=True)
     tags = PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True)
     cooking_time = IntegerField()
+
 
     class Meta:
         model = Recipe
@@ -179,6 +186,7 @@ class NewRecipeSerializer(serializers.ModelSerializer):
         )
 
     def validate_ingredients(self, value):
+
         ingredients = value
         print(ingredients)
         if not ingredients:
@@ -207,23 +215,37 @@ class NewRecipeSerializer(serializers.ModelSerializer):
             tags_list.append(tag)
         return value
 
-#    @atomic
+    def create_ingredients(self, ingredients, recipe):
+        for ingredient in ingredients:
+            IngredientsForRecipes.objects.create(
+                recipe=recipe,
+                ingredient_id=ingredient.get('id'),
+                amount=ingredient.get('amount'), )
+
+    @transaction.atomic
     def create(self, validated_data):
-        request = self.context.get('request')
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
-        recipe = Recipe.objects.create(
-            author=request.user,
-            **validated_data
-        )
-        self.create_ingredients(recipe, ingredients)
+        recipe = Recipe.objects.create(**validated_data)
         recipe.tags.set(tags)
+        self.create_ingredients(ingredients, recipe)
         return recipe
 
+#        request = self.context.get('request')
+#        ingredients = validated_data.pop('ingredients')
+#        tags = validated_data.pop('tags')
+#        recipe = Recipe.objects.create(
+#            author=request.user,
+#            **validated_data
+#        )
+#        self.create_ingredients(recipe, ingredients)
+#        recipe.tags.set(tags)
+#        return recipe
+
 #    @atomic
-    def update(self, instance, validated_data):
-        ingredients = validated_data.pop('ingredients')
-        recipe = instance
-        IngredientsForRecipes.objects.filter(recipe=recipe).delete()
-        self.create_ingredients(recipe, ingredients)
-        return super().update(recipe, validated_data)
+#    def update(self, instance, validated_data):
+#        ingredients = validated_data.pop('ingredients')
+#        recipe = instance
+#        IngredientsForRecipes.objects.filter(recipe=recipe).delete()
+#        self.create_ingredients(recipe, ingredients)
+#        return super().update(recipe, validated_data)
