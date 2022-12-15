@@ -236,15 +236,14 @@ class NewRecipeSerializer(serializers.ModelSerializer):
         self.create_ingredients(ingredients, recipe)
         return recipe
 
-
-#    @atomic
-#    def update(self, instance, validated_data):
-#        ingredients = validated_data.pop('ingredients')
-#        recipe = instance
-#        IngredientsForRecipes.objects.filter(recipe=recipe).delete()
-#        self.create_ingredients(recipe, ingredients)
-#        return super().update(recipe, validated_data)
-
+    def update(self, instance, validated_data):
+        ingredients = validated_data.pop('ingredients')
+        instance.ingredients.clear()
+        self.create_ingredients(ingredients, instance)
+        instance.tags.clear()
+        instance.tags.set(validated_data.pop('tags'))
+        instance.save()
+        return instance
 
     def to_representation(self, instance):
         return RecipeSerializer(
