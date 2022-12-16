@@ -9,7 +9,7 @@ from recipes.models import Tag, Ingredient, Recipe, Favorites, ShoppingCart, Ing
 from djoser.serializers import UserSerializer
 from rest_framework.exceptions import ValidationError
 from rest_framework import status
-from rest_framework.serializers import (IntegerField, ModelSerializer,
+from rest_framework.serializers import (IntegerField,
                                         PrimaryKeyRelatedField,
                                         SerializerMethodField,
                                         SlugRelatedField, ValidationError)
@@ -136,7 +136,20 @@ class RecipeSerializer(serializers.ModelSerializer):
             user=request.user, recipe__id=obj.id).exists()
 
 
-class IngredientsForRecipesNewSerializer(ModelSerializer):
+class RecipeForFavoritesSerializer(serializers.ModelSerializer):
+    image = Base64ImageField()
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'id',
+            'name',
+            'image',
+            'cooking_time'
+        )
+
+
+class IngredientsForRecipesNewSerializer(serializers.ModelSerializer):
     id = IntegerField(write_only=True)
 
     class Meta:
