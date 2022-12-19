@@ -1,53 +1,50 @@
-version: '3.3'
-services:
-
-  frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
-    volumes:
-      - ../frontend/:/app/result_build/
-  nginx:
-    image: nginx:1.19.3
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ../frontend/build:/usr/share/nginx/html/
-      - ../docs/:/usr/share/nginx/html/api/docs/
-
-
 version: '3'
 
 services:
   db:
     image: postgres:13.0-alpine
     volumes:
-      - my_data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env
+    restart: always
 
   web:
-    image: skyflyer1/api_yamdb:latest
+    image: skyflyer1/foodgram:latest
     restart: always
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
+#      - redoc:/app/api/docs/
     depends_on:
       - db
     env_file:
       - ./.env
+
+  frontend:
+    image: skyflyer1/foodgram-frontend:latest
+    volumes:
+      - ../frontend/:/app/result_build/
+#    build:
+#      context: ../frontend
+#      dockerfile: Dockerfile
+#    volumes:
+#      - ../frontend/:/app/result_build/  
 
   nginx:
     image: nginx:1.21.3-alpine
     ports:
       - "80:80"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ../frontend/build:/usr/share/nginx/html/
+      - ../docs/:/usr/share/nginx/html/api/docs/
       - static_value:/var/html/static/
       - media_value:/var/html/media/
+#      - redoc:/usr/share/nginx/html/api/docs/
     depends_on:
       - web
+    restart: always
 
 volumes:
   my_data:
