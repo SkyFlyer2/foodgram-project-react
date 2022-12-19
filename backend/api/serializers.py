@@ -179,13 +179,12 @@ class NewRecipeSerializer(serializers.ModelSerializer):
             raise ValidationError({'Необходимо добавить ингридиенты!'})
         ingredients_list = []
         for item in ingredients:
-            print(item)
             ingredient = get_object_or_404(Ingredient, id=item['id'])
             if ingredient in ingredients_list:
                 raise ValidationError({'Ингридиенты должны быть уникальными!'})
             if int(item['amount']) <= 0:
                 raise ValidationError({
-                    'amount': 'Количество ингредиента должно быть больше 0!'
+                    'Количество ингредиентов должно быть больше 0!'
                 })
             ingredients_list.append(ingredient)
         return value
@@ -219,10 +218,12 @@ class NewRecipeSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         ingredients = validated_data.pop('ingredients')
+        instance = super().update(instance, validated_data)
         instance.ingredients.clear()
         self.create_ingredients(ingredients, instance)
         instance.tags.clear()
         instance.tags.set(validated_data.pop('tags'))
+        instance.text.clear()
         instance.save()
         return instance
 
