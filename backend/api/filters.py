@@ -1,20 +1,19 @@
 import django_filters
 from django.contrib.auth import get_user_model
-from django_filters.rest_framework import FilterSet, filters
 from recipes.models import Ingredient, Recipe, Tag
 
 from users.models import User
 
-class IngredientsSearchFilter(django_filters.SearchFilter):
+class IngredientsSearchFilter(django_filters.FilterSet):
     search_param = 'name'
 
 
 class RecipeAndTagsFilter(django_filters.FilterSet):
     is_in_shopping_cart = django_filters.BooleanFilter(
-    is_favorited = django_filters.BooleanFilter(method='filter_is_favorited')
         method='filter_is_in_shopping_cart'
-    tags = django_filters.AllValuesMultipleFilter(field_name='tags__slug')
     )
+    is_favorited = django_filters.BooleanFilter(method='filter_is_favorited')
+    tags = django_filters.AllValuesMultipleFilter(field_name='tags__slug')
 
     class Meta:
         model = Recipe
