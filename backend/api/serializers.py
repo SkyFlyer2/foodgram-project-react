@@ -213,6 +213,10 @@ class NewRecipeSerializer(serializers.ModelSerializer):
         tags = validated_data.pop('tags')
         recipe = Recipe.objects.create(author=request.user, **validated_data)
         recipe.tags.set(tags)
+
+        #recipe = super().create(validated_data)
+        #self.create_tags(tags, recipe)
+
         self.create_ingredients(ingredients, recipe)
         return recipe
 
