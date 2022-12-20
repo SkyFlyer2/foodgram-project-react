@@ -9,17 +9,16 @@ services:
 #      - ..//backend/.env
 #    restart: always
 
-  web:
+  backend:
 #    image: skyflyer1/foodgram:latest
     build:
       context: ../backend
       dockerfile: ../backend/Dockerfile
     restart: always
     volumes: 
-      - ../backend/:/app/result_build/
+#      - ../backend/:/app/result_build/
       - static_value:/app/static/
       - media_value:/app/media/
-#      - redoc:/app/api/docs/
 #    depends_on:
 #      - db
     env_file:
@@ -34,6 +33,8 @@ services:
       dockerfile: ../frontend/Dockerfile
     volumes:
       - ../frontend/:/app/result_build/  
+    depends_on:
+      - backend
 
   nginx:
     image: nginx:1.21.3-alpine
@@ -47,7 +48,7 @@ services:
       - media_value:/var/html/media/
 #      - redoc:/usr/share/nginx/html/api/docs/
     depends_on:
-      - web
+      - backend
     restart: always
 
 volumes:
