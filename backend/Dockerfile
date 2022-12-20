@@ -1,5 +1,5 @@
 FROM python:3.8.10-slim
-WORKDIR app
+WORKDIR /app
 
 COPY requirements.txt .
 
