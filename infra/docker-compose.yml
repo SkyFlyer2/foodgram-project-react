@@ -33,7 +33,9 @@ services:
       context: ../frontend
       dockerfile: ../frontend/Dockerfile
     volumes:
-      - ../frontend/:/app/result_build/  
+      - ../frontend/:/app/result_build/
+    depends_on:
+      - backend
 
   nginx:
     image: nginx:1.21.3-alpine
@@ -48,9 +50,10 @@ services:
 #      - redoc:/usr/share/nginx/html/api/docs/
     depends_on:
       - backend
+      - frontend
     restart: always
 
 volumes:
-  postgres_data:
+#  postgres_data:
   static_value:
   media_value:
