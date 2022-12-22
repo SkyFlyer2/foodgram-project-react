@@ -61,9 +61,35 @@ class RecipeInfoSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'image', 'cooking_time')
 
 
-class FollowSerializer(UsersSerializer):
+class ShowFollowSerializer(UsersSerializer):
     recipes_count = SerializerMethodField()
     recipes = SerializerMethodField()
+
+    class Meta(UsersSerializer.Meta):
+        fields = UsersSerializer.Meta.fields + (
+            'recipes', 'recipes_count'
+        )
+        read_only_fields = ('email', 'username')
+
+    # исправить, как в yatube_api!
+
+    def get_recipes_count(self, obj):
+        recipes = Recipe.objects.filter(author=obj)
+        return recipes.count()
+
+    def get_recipes(self, obj):
+        request = self.context.get('request')
+        limit = request.GET.get('recipes_limit')
+        recipes = obj.recipes.all()
+        if limit:
+            recipes = recipes[:int(limit)]
+        serializer = RecipeInfoSerializer(recipes, many=True, read_only=True)
+        return serializer.data
+
+
+class FollowSerializer(UsersSerializer):
+    user = serializers.IntegerField(source="user.id")
+    author = serializers.IntegerField(source="author.id")
 
     class Meta(UsersSerializer.Meta):
         fields = UsersSerializer.Meta.fields + (
@@ -88,19 +114,12 @@ class FollowSerializer(UsersSerializer):
             )
         return data
 
-    def get_recipes_count(self, obj):
-        return obj.recipes.count()
-
-    def get_recipes(self, obj):
-        request = self.context.get('request')
-        limit = request.GET.get('recipes_limit')
-        recipes = obj.recipes.all()
-        if limit:
-            recipes = recipes[:int(limit)]
-        serializer = RecipeInfoSerializer(recipes, many=True, read_only=True)
-        return serializer.data
-
-
+    def create(self, validated_data):
+        author = validated_data.get("author")
+        author = get_object_or_404(User, pk=author.get("id"))
+        user = validated_data.get("user")
+        return Follow.objects.create(user=user, author=author)
+ 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
