@@ -1,28 +1,24 @@
-from django.contrib.auth import get_user_model
-from rest_framework import serializers
-from rest_framework.fields import SerializerMethodField
-from django.shortcuts import get_object_or_404
 from django.db.models import F
-from django.db import transaction
-from users.models import Follow, User
-from recipes.models import Tag, Ingredient, Recipe, Favorites, ShoppingCart, IngredientsForRecipes
+from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer
-from rest_framework.exceptions import ValidationError
-from rest_framework import status
-from rest_framework.serializers import (IntegerField,
-                                        PrimaryKeyRelatedField,
-                                        SerializerMethodField,
-                                        SlugRelatedField, ValidationError)
 from drf_extra_fields.fields import Base64ImageField
+from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
+                            Recipe, ShoppingCart, Tag)
+from rest_framework import serializers, status
+from rest_framework.exceptions import ValidationError
+from rest_framework.serializers import (IntegerField, PrimaryKeyRelatedField,
+                                        SerializerMethodField,
+                                        )
+from users.models import Follow, User
 
 
 class UsersSerializer(UserSerializer):
     is_subscribed = SerializerMethodField(read_only=True)
 
-
     class Meta:
         fields = (
-            'email', 'id', 'username', 'first_name', 'last_name', 'is_subscribed',
+            'email', 'id', 'username',
+            'first_name', 'last_name', 'is_subscribed',
         )
         model = User
 
@@ -48,7 +44,7 @@ class FollowSerializer(UsersSerializer):
             'recipes', 'recipes_count'
         )
         read_only_fields = ('email', 'username')
-    
+
     # исправить, как в yatube_api!
 
     def validate(self, data):
@@ -110,6 +106,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             'is_favorited', 'is_in_shopping_cart',
             'name', 'image', 'text', 'cooking_time',
         )
+
     def get_ingredients(self, obj):
         recipe = obj
         ingredients = recipe.ingredients.values(
@@ -119,7 +116,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             amount=F('ingredientsforrecipes__amount')
         )
         return ingredients
-
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')
@@ -163,7 +159,6 @@ class NewRecipeSerializer(serializers.ModelSerializer):
     ingredients = IngredientsForRecipesNewSerializer(many=True)
     tags = PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True)
     cooking_time = IntegerField()
-
 
     class Meta:
         model = Recipe
@@ -221,7 +216,6 @@ class NewRecipeSerializer(serializers.ModelSerializer):
         IngredientsForRecipes.objects.filter(recipe=instance).delete()
         self.create_ingredients(instance, ingredients)
         return super().update(instance, validated_data)
-
 
     def to_representation(self, instance):
         return RecipeSerializer(

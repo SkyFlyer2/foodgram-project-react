@@ -1,5 +1,4 @@
 import os
-from datetime import timedelta
 
 from dotenv import load_dotenv
 
@@ -64,7 +63,7 @@ TEMPLATES = [
 
 #CORS_ALLOWED_ORIGINS = [
 #    'http://localhost:3000',
-#] 
+#]
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 

@@ -1,8 +1,6 @@
 import django_filters
-from django.contrib.auth import get_user_model
-from recipes.models import Ingredient, Recipe, Tag
+from recipes.models import Recipe
 
-from users.models import User
 
 class IngredientsSearchFilter(django_filters.FilterSet):
     search_param = 'name'

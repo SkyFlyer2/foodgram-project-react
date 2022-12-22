@@ -1,32 +1,23 @@
-from django.conf import settings
-from django.http import HttpResponse
-from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
 from datetime import datetime
-from django.db.models import Avg, Sum, F
+
+from api.pagination import SetCustomPagination
+from django.db.models import Sum
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, status, viewsets
-from rest_framework.decorators import action, api_view  #, permission_classes
-from rest_framework.mixins import (CreateModelMixin, DestroyModelMixin,
-                                   ListModelMixin)
-from rest_framework.permissions import (AllowAny, IsAuthenticated,
-                                        IsAuthenticatedOrReadOnly)
-from rest_framework import permissions
-from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
-
-from users.models import User
-
 from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
                             Recipe, ShoppingCart, Tag)
-from api.pagination import SetCustomPagination
-from .permissions import (IsAdmin, IsAdminOrReadOnly,
-                          IsAuthorAdminModeratorOrReadOnly)
-from .serializers import (IngredientSerializer, RecipeSerializer,
-                            NewRecipeSerializer, TagSerializer,
-                            RecipeForFavoritesSerializer)
+from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
 from .filters import IngredientsSearchFilter, RecipeAndTagsFilter
+from .permissions import (IsAdminOrReadOnly,
+                          IsAuthorAdminModeratorOrReadOnly)
+from .serializers import (IngredientSerializer, NewRecipeSerializer,
+                          RecipeForFavoritesSerializer, RecipeSerializer,
+                          TagSerializer)
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
@@ -46,7 +37,9 @@ class TagViewSet(viewsets.ModelViewSet):
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
-    permission_classes = (IsAuthorAdminModeratorOrReadOnly | IsAdminOrReadOnly,)
+    permission_classes = (
+        IsAuthorAdminModeratorOrReadOnly | IsAdminOrReadOnly,
+        )
     pagination_class = SetCustomPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeAndTagsFilter
@@ -83,7 +76,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return Response({'errors': 'Рецепт уже удален!'},
                         status=status.HTTP_400_BAD_REQUEST)
 
-
     @action(
         detail=True,
         methods=['post', 'delete'],
@@ -93,7 +85,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if request.method == 'POST':
             return self.add_recipe(ShoppingCart, request.user, pk)
         return self.delete_recipe(ShoppingCart, request.user, pk)
-
 
     @action(
         detail=False,
@@ -110,13 +101,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             'ingredient__name',
             'ingredient__measurement_unit'
         ).annotate(amount=Sum('amount'))
-#        ).values(
-#            name=F('ingredient__name'),
-#            measurement_unit=F('ingredient__measurement_unit')
-#        ).annotate(amount=Sum('amount')).values_list(
-#            'ingredient__name', 'amount', 'ingredient__measurement_unit'
-#        )
-    
+
         today = datetime.today()
         shopping_list = (
             f'Список покупок для: {user.get_full_name()}\n\n'
