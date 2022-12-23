@@ -48,16 +48,18 @@ class UsersViewSet(UserViewSet):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
-        detail=True,
+        detail=False,
+        methods=['get'],
         permission_classes=[IsAuthenticated]
     )
     def subscriptions(self, request):
         user = request.user
         queryset = User.objects.filter(following__user=user)
+        print(queryset)
         pages = self.paginate_queryset(queryset)
-        print('okokokokokoko')
-        serializer = ShowFollowSerializer(
-#        serializer = FollowSerializer2(
+        print('ыгисыскшзешщты')
+#        serializer = ShowFollowSerializer(
+        serializer = FollowSerializer2(
             pages,
             many=True,
             context={'request': request}

@@ -4,44 +4,37 @@ from django.db import models
 
 class User(AbstractUser):
 
-    user = 'user'
-    moderator = 'moderator'
-    admin = 'admin'
+#    user = 'user'
+#    moderator = 'moderator'
+#    admin = 'admin'
 
-    ROLES = (
-        (user, user),
-        (moderator, moderator),
-        (admin, admin),
-    )
+#    ROLES = (
+#        (user, user),
+#        (moderator, moderator),
+#        (admin, admin),
+#    )
 
     username = models.CharField(
-        max_length=25,
+        max_length=150,
         unique=True,
         blank=False,
         null=False,
         verbose_name='Имя пользователя'
     )
     email = models.EmailField(
-        max_length=50,
+        max_length=254,
         unique=True,
         verbose_name='Почта'
     )
-    role = models.CharField(
-        max_length=30,
-        blank=True,
-        choices=ROLES,
-        default='user',
-        verbose_name='Роль пользователя'
-    )
-
+ 
     first_name = models.CharField(
-        max_length=30,
+        max_length=150,
         blank=True,
         verbose_name='Имя'
     )
 
     last_name = models.CharField(
-        max_length=30,
+        max_length=150,
         blank=True,
         verbose_name='Фамилия'
     )
