@@ -52,6 +52,7 @@ class UsersSerializer(UserSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
+#        print(Follow.objects.filter(user=user, author=obj).exists())
         return Follow.objects.filter(user=user, author=obj).exists()
 
 
@@ -175,10 +176,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 class RecipeSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
-#    ingredients = IngredientsForRecipes(
-#        many=True,
-#        read_only=True,
-#    )
+
     ingredients = SerializerMethodField()
     author = UsersSerializer(read_only=True)
     image = Base64ImageField()
@@ -205,17 +203,21 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')
+#        print(request.user)
+#        print(Favorites.objects.filter(recipe=obj, user=request.user))
         if request.user.is_anonymous:
             return False
         return Favorites.objects.filter(
-            user=request.user, recipe__id=obj.id).exists()
+             recipe=obj, user=request.user
+        ).exists()
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
         if request.user.is_anonymous:
             return False
         return ShoppingCart.objects.filter(
-            user=request.user, recipe__id=obj.id).exists()
+             recipe=obj, user=request.user
+        ).exists()
 
 
 class RecipeForFavoritesSerializer(serializers.ModelSerializer):
