@@ -56,8 +56,8 @@ class UsersViewSet(UserViewSet):
         queryset = User.objects.filter(following__user=user)
         pages = self.paginate_queryset(queryset)
         print('okokokokokoko')
-#        serializer = ShowFollowSerializer(
-        serializer = FollowSerializer2(
+        serializer = ShowFollowSerializer(
+#        serializer = FollowSerializer2(
             pages,
             many=True,
             context={'request': request}
