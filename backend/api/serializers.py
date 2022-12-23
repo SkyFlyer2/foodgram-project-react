@@ -1,4 +1,5 @@
 from django.db.models import F
+from django.db import models
 from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer, UserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
@@ -203,7 +204,6 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')
-#        print(request.user)
 #        print(Favorites.objects.filter(recipe=obj, user=request.user))
         if request.user.is_anonymous:
             return False
@@ -246,7 +246,7 @@ class NewRecipeSerializer(serializers.ModelSerializer):
     author = UsersSerializer(read_only=True)
     ingredients = IngredientsForRecipesNewSerializer(many=True)
     tags = PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True)
-    cooking_time = IntegerField()
+    cooking_time = models.PositiveSmallIntegerField()
 
     class Meta:
         model = Recipe
@@ -256,20 +256,21 @@ class NewRecipeSerializer(serializers.ModelSerializer):
         )
 
     def validate_ingredients(self, value):
+        """Валидатор ингредиентов в рецепте."""
 
         ingredients = value
         if not ingredients:
-            raise ValidationError({'Необходимо добавить ингридиенты!'})
-        ingredients_list = []
+            raise ValidationError({'Добавьте ингридиенты!'})
         for item in ingredients:
-            ingredient = get_object_or_404(Ingredient, id=item['id'])
-            if ingredient in ingredients_list:
-                raise ValidationError({'Ингридиенты должны быть уникальными!'})
             if int(item['amount']) <= 0:
                 raise ValidationError({
                     'Количество ингредиентов должно быть больше 0!'
                 })
-            ingredients_list.append(ingredient)
+        items = [item["id"] for item in ingredients]
+#        print(items)
+#        print(set(items))
+        if len(items) != len(set(items)):
+            raise ValidationError({'Ингредиенты должны быть уникальными!'})
         return value
 
     def validate_tags(self, value):
