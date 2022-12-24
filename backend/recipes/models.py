@@ -64,7 +64,6 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(
         Tag,
-#        related_name='recipes',
         verbose_name='Теги',
     )
     cooking_time = models.PositiveSmallIntegerField(
@@ -106,7 +105,7 @@ class IngredientsForRecipes(models.Model):
 
     class Meta:
         verbose_name = 'Ингредиент'
-        verbose_name_plural = 'Ингредиенты в рецептах'
+        verbose_name_plural = 'Ингредиенты для рецептов'
         ordering = ['-id']
         models.UniqueConstraint(
             fields=['recipe', 'ingredient', ],
@@ -144,7 +143,6 @@ class ShoppingCart(models.Model):
         ]
 
     def __str__(self):
-        # return f'{self.user} добавил "{self.recipe}" в Корзину покупок'
         return f'"{self.recipe}" добавлено в корзину'
 
 

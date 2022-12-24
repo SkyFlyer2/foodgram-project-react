@@ -1,5 +1,5 @@
 from api.pagination import SetCustomPagination
-from api.serializers import ShowFollowSerializer, FollowSerializer2, UsersSerializer
+from api.serializers import FollowSerializer, UsersSerializer
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from rest_framework import status
@@ -25,13 +25,13 @@ class UsersViewSet(UserViewSet):
         user = request.user
         author_id = self.kwargs.get('id')
         author = get_object_or_404(User, id=author_id)
-        serializer = FollowSerializer2(
+        serializer = FollowSerializer(
             data={"user": request.user.id, "author": id}
         )
 
         if request.method == 'POST':
 #            serializer = ShowFollowSerializer(
-            serializer = FollowSerializer2(
+            serializer = FollowSerializer(
                 author,
                 data=request.data,
                 context={"request": request}
@@ -58,7 +58,7 @@ class UsersViewSet(UserViewSet):
         print(queryset)
         pages = self.paginate_queryset(queryset)
 #        serializer = ShowFollowSerializer(
-        serializer = FollowSerializer2(
+        serializer = FollowSerializer(
             pages,
             many=True,
             context={'request': request}

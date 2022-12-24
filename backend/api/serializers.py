@@ -14,6 +14,8 @@ from users.models import Follow, User
 
 
 class UserRegistrationSerializer(UserCreateSerializer):
+    """Регистрация нового пользователя"""
+
 
     class Meta:
         model = User
@@ -40,6 +42,8 @@ class UserRegistrationSerializer(UserCreateSerializer):
 
 
 class UsersSerializer(UserSerializer):
+    """Информация о пользователе"""
+
     is_subscribed = SerializerMethodField(read_only=True)
 
     class Meta:
@@ -58,72 +62,17 @@ class UsersSerializer(UserSerializer):
 
 
 class RecipeInfoSerializer(serializers.ModelSerializer):
+    """Краткая информация о рецепте """
+    image = Base64ImageField()
+
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
 
 
-class ShowFollowSerializer(UsersSerializer):
-    recipes_count = SerializerMethodField()
-    recipes = SerializerMethodField()
-
-    class Meta(UsersSerializer.Meta):
-        fields = UsersSerializer.Meta.fields + (
-            'recipes', 'recipes_count'
-        )
-        read_only_fields = ('email', 'username')
-
-    # исправить, как в yatube_api!
-
-    def get_recipes_count(self, obj):
-        recipes = Recipe.objects.filter(author=obj)
-        return recipes.count()
-
-    def get_recipes(self, obj):
-        request = self.context.get('request')
-        limit = request.GET.get('recipes_limit')
-        recipes = obj.recipes.all()
-        if limit:
-            recipes = recipes[:int(limit)]
-        serializer = RecipeInfoSerializer(recipes, many=True, read_only=True)
-        return serializer.data
-
-
 class FollowSerializer(UsersSerializer):
-    user = serializers.IntegerField(source="user.id")
-    author = serializers.IntegerField(source="author.id")
+    """Управление подписками"""
 
-    class Meta(UsersSerializer.Meta):
-        fields = UsersSerializer.Meta.fields + (
-            'recipes', 'recipes_count'
-        )
-        read_only_fields = ('email', 'username')
-
-    # исправить, как в yatube_api!
-
-    def validate(self, data):
-        author = self.instance
-        user = self.context.get('request').user
-        if Follow.objects.filter(author=author, user=user).exists():
-            raise ValidationError(
-                detail='Разрешена только однократная подписка на автора!',
-                code=status.HTTP_400_BAD_REQUEST
-            )
-        if user == author:
-            raise ValidationError(
-                detail='Нельзя подписаться на самого себя!',
-                code=status.HTTP_400_BAD_REQUEST
-            )
-        return data
-
-    def create(self, validated_data):
-        author = validated_data.get("author")
-        author = get_object_or_404(User, pk=author.get("id"))
-        user = validated_data.get("user")
-        return Follow.objects.create(user=user, author=author)
-
-
-class FollowSerializer2(UsersSerializer):
     recipes_count = SerializerMethodField()
     recipes = SerializerMethodField()
 
@@ -132,8 +81,6 @@ class FollowSerializer2(UsersSerializer):
             'recipes', 'recipes_count'
         )
         read_only_fields = ('email', 'username')
-    
-    # исправить, как в yatube_api!
 
     def validate(self, data):
         author = self.instance
@@ -164,18 +111,22 @@ class FollowSerializer2(UsersSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
+    """Теги"""
     class Meta:
         model = Tag
         fields = '__all__'
 
 
 class IngredientSerializer(serializers.ModelSerializer):
+    """Ингредиенты"""
     class Meta:
         model = Ingredient
         fields = '__all__'
 
 
 class RecipeSerializer(serializers.ModelSerializer):
+    """Управление выводом рецептов"""
+
     tags = TagSerializer(many=True, read_only=True)
 
     ingredients = SerializerMethodField()
@@ -220,20 +171,9 @@ class RecipeSerializer(serializers.ModelSerializer):
         ).exists()
 
 
-class RecipeForFavoritesSerializer(serializers.ModelSerializer):
-    image = Base64ImageField()
-
-    class Meta:
-        model = Recipe
-        fields = (
-            'id',
-            'name',
-            'image',
-            'cooking_time'
-        )
-
-
 class IngredientsForRecipesNewSerializer(serializers.ModelSerializer):
+    """Список ингредиентов для рецепта"""
+
     id = IntegerField(write_only=True)
 
     class Meta:
@@ -242,6 +182,8 @@ class IngredientsForRecipesNewSerializer(serializers.ModelSerializer):
 
 
 class NewRecipeSerializer(serializers.ModelSerializer):
+    """Создание нового рецепта"""
+
     image = Base64ImageField(use_url=True)
     author = UsersSerializer(read_only=True)
     ingredients = IngredientsForRecipesNewSerializer(many=True)

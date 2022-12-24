@@ -16,7 +16,7 @@ from .filters import IngredientsSearchFilter, RecipeAndTagsFilter
 from .permissions import (IsAdminOrReadOnly,
                           IsAuthorAdminModeratorOrReadOnly)
 from .serializers import (IngredientSerializer, NewRecipeSerializer,
-                          RecipeForFavoritesSerializer, RecipeSerializer,
+                          RecipeInfoSerializer, RecipeSerializer,
                           TagSerializer)
 
 
@@ -65,7 +65,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_400_BAD_REQUEST)
         recipe = get_object_or_404(Recipe, id=pk)
         model.objects.create(user=user, recipe=recipe)
-        serializer = RecipeForFavoritesSerializer(recipe)
+        serializer = RecipeInfoSerializer(recipe)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def delete_recipe(self, model, user, pk):
