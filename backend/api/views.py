@@ -21,6 +21,8 @@ from .serializers import (IngredientSerializer, NewRecipeSerializer,
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
+    """Ингредиенты"""
+
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = (IsAdminOrReadOnly,)
@@ -29,12 +31,16 @@ class IngredientViewSet(viewsets.ModelViewSet):
 
 
 class TagViewSet(viewsets.ModelViewSet):
+    """Теги"""
+
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (IsAdminOrReadOnly,)
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
+    """Работа со списком рецептов, добавление, удаление, вывод списка покупок"""
+
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     permission_classes = (
@@ -113,7 +119,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
             f' - {ingredient["amount"]}'
             for ingredient in ingredients
         ])
-        #shopping_list += f'\n\nFoodgram ({today:%Y})'
 
         filename = f'{user.username}_shopping_list.txt'
         response = HttpResponse(shopping_list, content_type='text/plain')

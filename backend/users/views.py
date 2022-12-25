@@ -12,6 +12,8 @@ from .models import Follow
 
 
 class UsersViewSet(UserViewSet):
+    """Управление пользователями, подписка, отписка, вывод активных подписок"""
+
     queryset = User.objects.all()
     serializer_class = UsersSerializer
     pagination_class = SetCustomPagination
@@ -30,7 +32,6 @@ class UsersViewSet(UserViewSet):
         )
 
         if request.method == 'POST':
-#            serializer = ShowFollowSerializer(
             serializer = FollowSerializer(
                 author,
                 data=request.data,
@@ -57,7 +58,6 @@ class UsersViewSet(UserViewSet):
         queryset = User.objects.filter(following__user=user)
         print(queryset)
         pages = self.paginate_queryset(queryset)
-#        serializer = ShowFollowSerializer(
         serializer = FollowSerializer(
             pages,
             many=True,

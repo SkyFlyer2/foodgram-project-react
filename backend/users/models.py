@@ -4,16 +4,6 @@ from django.db import models
 
 class User(AbstractUser):
 
-#    user = 'user'
-#    moderator = 'moderator'
-#    admin = 'admin'
-
-#    ROLES = (
-#        (user, user),
-#        (moderator, moderator),
-#        (admin, admin),
-#    )
-
     username = models.CharField(
         max_length=150,
         unique=True,
@@ -80,3 +70,6 @@ class Follow(models.Model):
         )
         verbose_name = 'Подписки'
         verbose_name_plural = 'Подписки'
+
+    def __str__(self):
+        return f"{self.user} подписался на {self.author}"

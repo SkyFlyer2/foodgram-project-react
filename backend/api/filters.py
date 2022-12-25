@@ -4,8 +4,8 @@ from recipes.models import Recipe, Ingredient
 
 
 class IngredientsSearchFilter(django_filters.FilterSet):
-#    search_param = '^name^',
-#    lookup_expr="istartswith",
+    """Фильтр для поиска по частичному названию ингредиента"""
+
     name = django_filters.CharFilter(
         field_name="name",
         lookup_expr="istartswith",
@@ -17,6 +17,8 @@ class IngredientsSearchFilter(django_filters.FilterSet):
 
 
 class RecipeAndTagsFilter(filters.FilterSet):
+    """Фильтр для рецептов, списка покупок, избранного"""
+
     is_in_shopping_cart = filters.BooleanFilter(
         method='filter_is_in_shopping_cart'
     )
@@ -30,7 +32,6 @@ class RecipeAndTagsFilter(filters.FilterSet):
     def filter_is_favorited(self, queryset, name, value):
         print('value=', value)
         if self.request.user.is_authenticated and value:
-            #return queryset.filter(in_favorite__user=self.request.user)
             return queryset.filter(favorites__user=self.request.user)
         return queryset
 
