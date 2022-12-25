@@ -39,7 +39,8 @@ class TagViewSet(viewsets.ModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    """Работа со списком рецептов, добавление, удаление, вывод списка покупок"""
+    """Работа со списком рецептов, добавление,
+     удаление, вывод списка покупок"""
 
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
