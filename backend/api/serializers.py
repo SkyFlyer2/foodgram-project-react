@@ -16,7 +16,6 @@ from users.models import Follow, User
 class UserRegistrationSerializer(UserCreateSerializer):
     """Регистрация нового пользователя"""
 
-
     class Meta:
         model = User
         fields = (
