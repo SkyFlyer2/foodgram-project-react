@@ -1,6 +1,6 @@
+from django.db import transaction
 from django.db.models import F
 from django.db import models
-from django.shortcuts import get_object_or_404
 from djoser.serializers import UserSerializer, UserCreateSerializer
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
@@ -154,7 +154,6 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')
-#        print(Favorites.objects.filter(recipe=obj, user=request.user))
         if request.user.is_anonymous:
             return False
         return Favorites.objects.filter(
@@ -208,8 +207,6 @@ class NewRecipeSerializer(serializers.ModelSerializer):
                     'Количество ингредиентов должно быть больше 0!'
                 })
         items = [item["id"] for item in ingredients]
-#        print(items)
-#        print(set(items))
         if len(items) != len(set(items)):
             raise ValidationError({'Ингредиенты должны быть уникальными!'})
         return value
@@ -225,6 +222,7 @@ class NewRecipeSerializer(serializers.ModelSerializer):
             tags_list.append(tag)
         return value
 
+    @transaction.atomic
     def create_ingredients(self, recipe, ingredients):
         for ingredient in ingredients:
             IngredientsForRecipes.objects.create(
@@ -232,6 +230,7 @@ class NewRecipeSerializer(serializers.ModelSerializer):
                 ingredient_id=ingredient.get('id'),
                 amount=ingredient.get('amount'), )
 
+    @transaction.atomic
     def create(self, validated_data):
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
@@ -241,6 +240,7 @@ class NewRecipeSerializer(serializers.ModelSerializer):
         recipe.tags.set(tags)
         return recipe
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         ingredients = validated_data.pop('ingredients')
         IngredientsForRecipes.objects.filter(recipe=instance).delete()
