@@ -72,7 +72,9 @@ class RecipeInfoSerializer(serializers.ModelSerializer):
 class FollowSerializer(UsersSerializer):
     """Управление подписками"""
 
-    recipes_count = SerializerMethodField()
+#    recipes_count = SerializerMethodField()
+    recipes_count = serializers.IntegerField(source='recipes.count',
+                                             read_only=True)
     recipes = SerializerMethodField()
 
     class Meta(UsersSerializer.Meta):
@@ -96,8 +98,8 @@ class FollowSerializer(UsersSerializer):
             )
         return data
 
-    def get_recipes_count(self, obj):
-        return obj.recipes.count()
+#    def get_recipes_count(self, obj):
+#        return obj.recipes.count()
 
     def get_recipes(self, obj):
         request = self.context.get('request')

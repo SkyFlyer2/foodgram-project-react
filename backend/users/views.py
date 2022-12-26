@@ -1,5 +1,6 @@
 from api.pagination import SetCustomPagination
 from api.serializers import FollowSerializer, UsersSerializer
+from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from rest_framework import status
@@ -56,6 +57,7 @@ class UsersViewSet(UserViewSet):
     def subscriptions(self, request):
         user = request.user
         queryset = User.objects.filter(following__user=user)
+        queryset.annotate(recipes_count=Count('recipes'))
         pages = self.paginate_queryset(queryset)
         serializer = FollowSerializer(
             pages,
