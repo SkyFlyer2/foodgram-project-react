@@ -54,10 +54,10 @@ class UsersSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         user = self.context.get('request').user
-        if user.is_anonymous:
-            return False
-#        print(Follow.objects.filter(user=user, author=obj).exists())
-        return Follow.objects.filter(user=user, author=obj).exists()
+        return (
+            user.is_authenticated
+            and Follow.objects.filter(user=user, author=obj).exists()
+            )
 
 
 class RecipeInfoSerializer(serializers.ModelSerializer):
@@ -153,20 +153,18 @@ class RecipeSerializer(serializers.ModelSerializer):
         return ingredients
 
     def get_is_favorited(self, obj):
-        request = self.context.get('request')
-        if request.user.is_anonymous:
-            return False
-        return Favorites.objects.filter(
-             recipe=obj, user=request.user
-        ).exists()
+        user = self.context.get('request').user
+        return (
+            user.is_authenticated
+            and Favorites.objects.filter(recipe=obj, user=user).exists()
+        )
 
     def get_is_in_shopping_cart(self, obj):
-        request = self.context.get('request')
-        if request.user.is_anonymous:
-            return False
-        return ShoppingCart.objects.filter(
-             recipe=obj, user=request.user
-        ).exists()
+        user = self.context.get('request').user
+        return (
+            user.is_authenticated
+            and ShoppingCart.objects.filter(recipe=obj, user=user).exists()
+        )
 
 
 class IngredientsForRecipesNewSerializer(serializers.ModelSerializer):
@@ -224,11 +222,15 @@ class NewRecipeSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create_ingredients(self, recipe, ingredients):
-        for ingredient in ingredients:
-            IngredientsForRecipes.objects.create(
+        ingredients_list = [
+            IngredientsForRecipes(
                 recipe=recipe,
                 ingredient_id=ingredient.get('id'),
-                amount=ingredient.get('amount'), )
+                amount=ingredient.get('amount'),
+            )
+            for ingredient in ingredients
+        ]
+        IngredientsForRecipes.objects.bulk_create(ingredients_list)
 
     @transaction.atomic
     def create(self, validated_data):
