@@ -1,10 +1,9 @@
-# API YaMDB
+# FoodGram
 ![foodgram_workflow](https://github.com/SkyFlyer2/foodgram-project-react
 /actions/workflows/foodgram_workflow.yml/badge.svg)
 
 Foodgram - онлайн-сервис для создания кулинарных рецептов. Позволяет публиковать рецепты, сохранять избранные, а также формировать список покупок для выбранных рецептов. Можно подписываться на авторов рецептов.
 
-Создано в рамках курса Яндекс.Практикум.
 
 # Описание проекта
 
@@ -123,10 +122,10 @@ curl --header "Content-Type: application/json" --request POST --data '{"email":"
 
 **Доступные адреса проекта:**
 
-    -  http://localhost/ - главная страница;
-    -  http://localhost/admin/ - панель администрирования;
-    -  http://localhost/api/ - API проекта
-    -  http://localhost/api/docs/redoc.html - документация к API
+    -  http://<IP адрес сервера>/ - главная страница;
+    -  http://<IP адрес сервера>/admin/ - панель администрирования;
+    -  http://<IP адрес сервера>/api/ - API проекта
+    -  http://<IP адрес сервера>/api/docs/redoc.html - документация к API
 
 ## Автор
 
