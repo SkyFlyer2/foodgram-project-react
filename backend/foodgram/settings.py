@@ -30,7 +30,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-#    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -57,12 +56,13 @@ TEMPLATES = [
     },
 ]
 
-#CORS_ORIGIN_ALLOW_ALL = True
-#CORS_URLS_REGEX = r"^/api/.*$"
+# if DEBUG:
+#    CORS_ORIGIN_ALLOW_ALL = True
+#    CORS_URLS_REGEX = r"^/api/.*$"
 
-#CORS_ALLOWED_ORIGINS = [
-#    'http://localhost:3000',
-#]
+#    CORS_ALLOWED_ORIGINS = [
+#        'http://localhost:3000',
+#        ]
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
@@ -109,7 +109,7 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 MEDIA_URL = '/media/'
@@ -140,7 +140,3 @@ DJOSER = {
         'user': ['rest_framework.permissions.IsAuthenticated'],
     },
 }
-
-# Количество выводимых постов на странице
-#COUNT_INDEX_POSTS = os.environ.get('COUNT_INDEX_POSTS', 10)
-#COUNT_GROUP_POSTS = os.environ.get('COUNT_GROUP_POSTS', 10)

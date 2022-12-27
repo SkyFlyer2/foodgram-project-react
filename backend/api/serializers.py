@@ -1,15 +1,14 @@
-from django.db import transaction
+from django.db import models, transaction
 from django.db.models import F
-from django.db import models
-from djoser.serializers import UserSerializer, UserCreateSerializer
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
-from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
-                            Recipe, ShoppingCart, Tag)
 from rest_framework import serializers, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import (IntegerField, PrimaryKeyRelatedField,
-                                        SerializerMethodField,
-                                        )
+                                        SerializerMethodField)
+
+from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
+                            Recipe, ShoppingCart, Tag)
 from users.models import Follow, User
 
 
