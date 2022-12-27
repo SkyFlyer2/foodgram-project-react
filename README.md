@@ -1,4 +1,4 @@
-# FoodGram
+# Foodgram
 ![foodgram_workflow](https://github.com/SkyFlyer2/foodgram-project-react
 /actions/workflows/foodgram_workflow.yml/badge.svg)
 
