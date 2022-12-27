@@ -28,6 +28,7 @@ class UserRegistrationSerializer(UserCreateSerializer):
         )
         extra_kwargs = {"password": {"write_only": True}}
 
+    @transaction.atomic
     def create(self, validated_data):
         user = User.objects.create(
             email=validated_data["email"],
@@ -72,7 +73,6 @@ class RecipeInfoSerializer(serializers.ModelSerializer):
 class FollowSerializer(UsersSerializer):
     """Управление подписками"""
 
-#    recipes_count = SerializerMethodField()
     recipes_count = serializers.IntegerField(source='recipes.count',
                                              read_only=True)
     recipes = SerializerMethodField()
@@ -97,9 +97,6 @@ class FollowSerializer(UsersSerializer):
                 code=status.HTTP_400_BAD_REQUEST
             )
         return data
-
-#    def get_recipes_count(self, obj):
-#        return obj.recipes.count()
 
     def get_recipes(self, obj):
         request = self.context.get('request')
@@ -232,7 +229,6 @@ class NewRecipeSerializer(serializers.ModelSerializer):
                 amount=ingredient.get('amount'),
             ) for ingredient in ingredients]
         )
-
 
     @transaction.atomic
     def create(self, validated_data):
