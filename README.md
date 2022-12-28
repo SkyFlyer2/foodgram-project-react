@@ -1,6 +1,6 @@
 # Foodgram
-![foodgram_workflow](https://github.com/SkyFlyer2/foodgram-project-react
-/actions/workflows/foodgram_workflow.yml/badge.svg)
+[![Foodgram workflow](https://github.com/SkyFlyer2/foodgram-project-react/actions/workflows/main.yml/badge.svg)](https://github.com/SkyFlyer2/foodgram-project-react/actions/workflows/main.yml)
+
 
 Foodgram - онлайн-сервис для создания кулинарных рецептов. Позволяет публиковать рецепты, сохранять избранные, а также формировать список покупок для выбранных рецептов. Можно подписываться на авторов рецептов.
 
@@ -60,7 +60,7 @@ server_name xxx.xxx.xxx.xxx;
 Из каталога infra скопируйте на удаленный сервер файлы  docker-compose.yml и default.conf.
 
 scp docker-compose.yml <username>@<host>:/home/<username>/docker-compose.yml
-scp -r default.conf <username>@<host>:/home/<username>/nginx/default.conf
+scp -r nginx.conf <username>@<host>:/home/<username>/nginx/nginx.conf
 
 
 Cоздайте файл ```.env```:
@@ -80,7 +80,7 @@ echo DB_HOST=db  >> .env
 echo DB_PORT=5432  >> .env
 ```
 
-Теперь можно установить и запустить приложение в контейнерах (контейнер backend загружается из DockerHub):
+Теперь можно установить и запустить приложение в контейнерах (контейнеры backend/frontend загружаются из DockerHub):
 ```bash 
 sudo docker-compose up -d
 ```
