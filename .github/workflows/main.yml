@@ -1,7 +1,7 @@
 # .github/workflows/**main.yml**
 name: Django-app workflow
 
-# on: [push]
+on: [push]
 
 jobs:
   tests:

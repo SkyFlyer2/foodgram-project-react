@@ -5,8 +5,3 @@ RUN npm install
 COPY . ./
 RUN npm run build
 CMD cp -r build result_build
-
-
-
-#RUN ["cp", "-r build", "result_build"]
-#RUN cp -rv build result_build
