@@ -22,7 +22,6 @@ jobs:
 
     - name: Test with flake8
       run: |
-        ls -la
         cd backend
         python3 -m flake8 backend
 
