@@ -6,11 +6,10 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from .models import Follow
 from api.pagination import SetCustomPagination
 from api.serializers import FollowSerializer, UsersSerializer
 from users.models import User
-
-from .models import Follow
 
 
 class UsersViewSet(UserViewSet):
@@ -45,7 +44,8 @@ class UsersViewSet(UserViewSet):
         if request.method == 'DELETE':
             subscription = get_object_or_404(Follow,
                                              user=user,
-                                             author=author)
+                                             author=author
+                                             )
             subscription.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 

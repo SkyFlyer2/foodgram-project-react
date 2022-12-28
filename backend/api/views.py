@@ -9,15 +9,14 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from api.pagination import SetCustomPagination
-from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
-                            Recipe, ShoppingCart, Tag)
-
 from .filters import IngredientsSearchFilter, RecipeAndTagsFilter
 from .permissions import IsAdminOrReadOnly, IsAuthorAdminModeratorOrReadOnly
 from .serializers import (IngredientSerializer, NewRecipeSerializer,
                           RecipeInfoSerializer, RecipeSerializer,
                           TagSerializer)
+from api.pagination import SetCustomPagination
+from recipes.models import (Favorites, Ingredient, IngredientsForRecipes,
+                            Recipe, ShoppingCart, Tag)
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
