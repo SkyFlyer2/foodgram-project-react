@@ -44,8 +44,7 @@ class UsersViewSet(UserViewSet):
         if request.method == 'DELETE':
             subscription = get_object_or_404(Follow,
                                              user=user,
-                                             author=author
-                                             )
+                                             author=author)
             subscription.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
