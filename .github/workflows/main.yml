@@ -25,10 +25,6 @@ jobs:
         cd api_yamdb
         python3 -m flake8
 
-    - name: Test with django tests
-      run: |
-        pytest
-
   build_and_push_to_docker_hub:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest

@@ -37,8 +37,7 @@ class UsersViewSet(UserViewSet):
             serializer = FollowSerializer(
                 author,
                 data=request.data,
-                context={"request": request}
-                )
+                context={"request": request})
             serializer.is_valid(raise_exception=True)
             Follow.objects.create(user=user, author=author)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -63,6 +62,5 @@ class UsersViewSet(UserViewSet):
         serializer = FollowSerializer(
             pages,
             many=True,
-            context={'request': request}
-            )
+            context={'request': request})
         return self.get_paginated_response(serializer.data)

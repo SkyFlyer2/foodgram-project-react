@@ -57,7 +57,7 @@ class UsersSerializer(UserSerializer):
         return (
             user.is_authenticated
             and Follow.objects.filter(user=user, author=obj).exists()
-            )
+        )
 
 
 class RecipeInfoSerializer(serializers.ModelSerializer):

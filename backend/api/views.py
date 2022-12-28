@@ -46,7 +46,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     serializer_class = RecipeSerializer
     permission_classes = (
         IsAuthorAdminModeratorOrReadOnly | IsAdminOrReadOnly,
-        )
+    )
     pagination_class = SetCustomPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeAndTagsFilter
