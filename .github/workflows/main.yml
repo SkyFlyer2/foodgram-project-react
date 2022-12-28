@@ -71,15 +71,15 @@ jobs:
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram-back:latest
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram-front:latest
             sudo docker-compose stop
-            rm .env
-            touch .env
-            echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
-            echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
-            echo DB_NAME=${{ secrets.DB_NAME }} >> .env
-            echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
-            echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
-            echo DB_HOST=${{ secrets.DB_HOST }} >> .env
-            echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+            rm backend/.env
+            touch backend/.env
+            echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> backend/.env
+            echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> backend/.env
+            echo DB_NAME=${{ secrets.DB_NAME }} >> backend/.env
+            echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> backend/.env
+            echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> backend/.env
+            echo DB_HOST=${{ secrets.DB_HOST }} >> backend/.env
+            echo DB_PORT=${{ secrets.DB_PORT }} >> backend/.env
             sudo docker-compose up --detach --build --force-recreate
             sudo docker-compose exec -T backend python3 manage.py makemigrations
             sudo docker-compose exec -T backend python3 manage.py migrate
