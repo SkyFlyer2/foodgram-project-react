@@ -7,7 +7,7 @@ User = get_user_model()
 
 class Ingredient(models.Model):
     name = models.CharField('Название', max_length=200)
-    measurement_unit = models.CharField('Единица измерения', max_length=200)
+    measurement_unit = models.CharField('Единица измерения', max_length=10)
 
     class Meta:
         verbose_name = 'Ингредиент'
@@ -106,7 +106,7 @@ class IngredientsForRecipes(models.Model):
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты для рецептов'
-        ordering = ['-id']
+#        ordering = ['-id']
         models.UniqueConstraint(
             fields=['recipe', 'ingredient', ],
             name='recipe_ingredient_uniq'
