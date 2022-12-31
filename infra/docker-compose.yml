@@ -13,7 +13,6 @@ services:
     image: skyflyer1/foodgram-back:latest
     restart: always
     volumes: 
-#      - ../backend/:/app/result_build/
       - static_value:/app/static/
       - media_value:/app/media/
     depends_on:
