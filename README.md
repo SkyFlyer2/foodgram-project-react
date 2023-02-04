@@ -1,13 +1,14 @@
 # Foodgram
 [![Foodgram workflow](https://github.com/SkyFlyer2/foodgram-project-react/actions/workflows/main.yml/badge.svg)](https://github.com/SkyFlyer2/foodgram-project-react/actions/workflows/main.yml)
 
-
-Foodgram - онлайн-сервис для создания кулинарных рецептов. Позволяет публиковать рецепты, сохранять избранные, а также формировать список покупок для выбранных рецептов. Можно подписываться на авторов рецептов.
-
-
 # Описание проекта
 
-Foodgram - учебный проект курса "Python-разработчик" на Яндекс.Практикум. Реализована методика разработки CI/CD (Continuos Integration/Continuos Delivery).
+### Foodgram - онлайн-сервис для создания кулинарных рецептов.
+Позволяет публиковать рецепты, сохранять избранные, а также формировать список покупок для выбранных рецептов. Можно подписываться на авторов рецептов.
+Реализована методика разработки CI/CD.
+
+## Автор
+SkyFlyer, telegram: @skyflyer1
 
 ## Ссылка на сайт
 Сервис запущен по [адресу](http://158.160.4.20/).
@@ -125,7 +126,3 @@ curl --header "Content-Type: application/json" --request POST --data '{"email":"
     -  http://<IP адрес сервера>/admin/ - панель администрирования;
     -  http://<IP адрес сервера>/api/ - API проекта
     -  http://<IP адрес сервера>/api/docs/redoc.html - документация к API
-
-## Автор
-
-SkyFlyer, telegram: @skyflyer1
