@@ -5,7 +5,7 @@
 
 ### Foodgram - онлайн-сервис для создания кулинарных рецептов.
 Позволяет публиковать рецепты, сохранять избранные, а также формировать список покупок для выбранных рецептов. Можно подписываться на авторов рецептов.
-Реализована методика разработки CI/CD.
+Реализована методика разработки CI/CD с использованием GitHub Actions.
 
 ## Автор
 SkyFlyer, telegram: @skyflyer1
@@ -13,15 +13,16 @@ SkyFlyer, telegram: @skyflyer1
 ## Ссылка на сайт
 Сервис запущен по [адресу](http://158.160.4.20/).
 
-## Технологии
+## Стек технологий
+* React
 * Python 3.8
 * Django 3.2
 * Django REST Framework
 * python-dotenv
-* git
+* Git
 * PostreSQL
 * Nginx
-* gunicorn
+* Gunicorn
 * Docker
 * DockerHub
 
