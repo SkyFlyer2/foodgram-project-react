@@ -8,7 +8,7 @@
 Реализована методика разработки CI/CD с использованием GitHub Actions.
 
 ## Автор
-SkyFlyer, telegram: @skyflyer1
+Ковалев Владислав (SkyFlyer), telegram: @skyflyer1
 
 ## Ссылка на сайт
 Сервис запущен по [адресу](http://158.160.4.20/).
