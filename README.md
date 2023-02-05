@@ -1,4 +1,4 @@
-# Foodgram
+# Продуктовый помощник
 [![Foodgram workflow](https://github.com/SkyFlyer2/foodgram-project-react/actions/workflows/main.yml/badge.svg)](https://github.com/SkyFlyer2/foodgram-project-react/actions/workflows/main.yml)
 
 # Описание проекта
